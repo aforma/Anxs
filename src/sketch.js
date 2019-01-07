@@ -25,9 +25,6 @@ exports.setup = function({ _two, _Two, _env, _scale }){
   background.fill = '#000';
   background.stroke = 'none'
   createSpheres();
-  setTimeout(() => {
-    env.done()
-  }, 10000)
 }
 
 exports.draw = function() {
