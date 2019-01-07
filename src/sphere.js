@@ -20,11 +20,13 @@ module.exports = class Sphere {
     this.width = two.renderer.domElement.width;
     this.angleStep = 360 / this.total;
     this.lines = [];
+    const curveX = Math.random() * this.scale(100)
+    const curveY = Math.random() * this.scale(100)
     for (let i = 0; i < this.total; i += 1) {
       this.lines[i] = {
         x: this.x,
         y: this.y,
-        line: this.two.makeCurve(this.x, this.y, this.x + 1,this.y + 1, true)
+        line: this.two.makeCurve(this.x, this.y, this.x + curveX ,this.y + curveY, true)
       }
     }
   }
@@ -34,7 +36,7 @@ module.exports = class Sphere {
   }
   
   drawLines() {
-    xoff = xoff + this.scale(0.001);
+    xoff = xoff + this.scale(0.01);
     var n = noise(xoff) * this.x + this.y;
     let angle = 0;
     for (let i = 0; i < this.total; i += 1) {
@@ -43,8 +45,8 @@ module.exports = class Sphere {
       const oldX = this.lines[i].x;
       const oldY = this.lines[i].y;
 
-      this.lines[i].x = oldX + (Math.cos(rad));
-      this.lines[i].y = oldY + (Math.sin(rad));
+      this.lines[i].x = oldX + (Math.cos(rad) * 0.1);
+      this.lines[i].y = oldY + (Math.sin(rad) * 0.1);
       const point = this.makePoint(this.lines[i].x, this.lines[i].y);
       this.lines[i].line.vertices.push(point);
       this.lines[i].line.noFill().stroke = '#ffffff'
