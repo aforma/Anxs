@@ -9,19 +9,20 @@ module.exports = class Sphere {
     this.x = x;
     this.y = y;
     this.radius = radius;
-    this.total = this.radius;
+    this.total = 1;
     this.branchX = x;
     this.branchY = y;
     this.circle = two.makeCircle(x, y, scale(radius));
     this.circle.fill = '#FFFFFF'
     this.circle.stroke = 'none';
     this.width = two.renderer.domElement.width;
-    this.angleStep = this.radius / 360;
+    this.angleStep = this.radius / this.total;
     this.lines = [];
-    for (let i = 0; i < this.radius / 10; i += 1) {
+    for (let i = 0; i < this.total; i += 1) {
       this.lines[i] = {
         x: this.x,
         y: this.y,
+        line: this.two.makeLine(this.x, this.y, this.x,this.y)
       }
     }
   }
@@ -31,17 +32,17 @@ module.exports = class Sphere {
   }
   
   drawLines() {
-    xoff = xoff + 0.1;
-    var n = noise(xoff);
-    for (let i = 0; i < 1; i += 1) {
-      let angle = 0;
-      const rad = calc.deg2rad(angle);
+    xoff = xoff + 0.001;
+    var n = noise(xoff) * this.x + this.y;
+    let angle = 0;
+    for (let i = 0; i < this.total; i += 1) {
+      const rad = calc.deg2rad(angle + n);
 
       const oldX = this.lines[i].x;
       const oldY = this.lines[i].y;
 
-      this.lines[i].x = oldX + (Math.cos(rad) * 0.1) + n;
-      this.lines[i].y = oldY + (Math.sin(rad) * 0.1) + n;
+      this.lines[i].x = oldX + (Math.cos(rad));
+      this.lines[i].y = oldY + (Math.sin(rad));
       const line = this.two.makeLine(oldX, oldY, this.lines[i].x, this.lines[i].y)
       line.stroke = '#ffffff'
       angle += this.angleStep;

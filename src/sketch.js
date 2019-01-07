@@ -36,7 +36,7 @@ const createSpheres = () => {
   for (let i = 0; i < MAX_SPHERES; i++) {
     const x = Math.random() * canvasWidth;
     const y = Math.random() * canvasHeight;
-    const circle = new Sphere({two, scale}, x, y, Math.random() * 75);
+    const circle = new Sphere({two, scale}, x, y, Math.random() * 50);
     spheres.push(circle);
   }
 }
