@@ -11,7 +11,7 @@ let circle = undefined;
 let canvasWidth;
 let canvasHeight;
 
-const MAX_SPHERES = 30;
+const MAX_SPHERES = 2;
 const spheres = [];
 
 exports.setup = function({ _two, _Two, _env, _scale }){
@@ -26,9 +26,9 @@ exports.setup = function({ _two, _Two, _env, _scale }){
   background.stroke = 'none'
   createSpheres();
   spheres.forEach(item => item.draw())
-  setTimeout(() => {
-    env.done();
-  }, 500)
+  // setTimeout(() => {
+  //   env.done();
+  // }, 500)
 }
 
 exports.draw = function() {

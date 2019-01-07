@@ -11,7 +11,7 @@ module.exports = class Sphere {
     this.scale = scale;
     this.y = y;
     this.radius = radius;
-    this.total = 10;
+    this.total = 40;
     this.branchX = x;
     this.branchY = y;
     this.circle = two.makeCircle(x, y, scale(radius));
@@ -23,10 +23,18 @@ module.exports = class Sphere {
     const curveX = Math.random() * this.scale(100)
     const curveY = Math.random() * this.scale(100)
     for (let i = 0; i < this.total; i += 1) {
+      const v1 = this.makePoint(this.x, this.y);
+      const l = this.two.makeCurve([v1, v1], true);
+      l.linewidth = 1;
+      l.noFill().stroke = '#ffffff'
+      l.vertices.forEach(v => {
+        v.addSelf(l.translation);
+      })
+      l.translation.clear();
       this.lines[i] = {
         x: this.x,
         y: this.y,
-        line: this.two.makeCurve(this.x, this.y, this.x + curveX ,this.y + curveY, true)
+        line: l
       }
     }
   }
@@ -45,11 +53,10 @@ module.exports = class Sphere {
       const oldX = this.lines[i].x;
       const oldY = this.lines[i].y;
 
-      this.lines[i].x = oldX + (Math.cos(rad) * 0.1);
-      this.lines[i].y = oldY + (Math.sin(rad) * 0.1);
+      this.lines[i].x = oldX + (Math.cos(rad));
+      this.lines[i].y = oldY + (Math.sin(rad));
       const point = this.makePoint(this.lines[i].x, this.lines[i].y);
       this.lines[i].line.vertices.push(point);
-      this.lines[i].line.noFill().stroke = '#ffffff'
       angle += this.angleStep;
     }
   }
