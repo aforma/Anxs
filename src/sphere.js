@@ -2,69 +2,54 @@ const noise = require('@giuliandrimba/noise');
 const calc = require('@doublepi/calc')
 
 let xoff = 0;
+const NUMBER_BRANCHES = 2;
 
 module.exports = class Sphere {
-  constructor({ two, Two, scale }, x, y, radius) {
-    this.two = two;
-    this.Two = Two;
+  constructor({ ctx, scale }, x, y, radius) {
+    this.ctx = ctx;
     this.x = x;
     this.scale = scale;
     this.y = y;
     this.radius = radius;
-    this.total = 40;
     this.branchX = x;
     this.branchY = y;
-    this.circle = two.makeCircle(x, y, scale(radius));
-    this.circle.fill = '#FFFFFF'
-    this.circle.stroke = 'none';
-    this.width = two.renderer.domElement.width;
-    this.angleStep = 360 / this.total;
+    this.width = this.ctx.canvas.width;
+    this.angleStep = 360 / NUMBER_BRANCHES;
     this.lines = [];
-    const curveX = Math.random() * this.scale(100)
-    const curveY = Math.random() * this.scale(100)
-    for (let i = 0; i < this.total; i += 1) {
-      const v1 = this.makePoint(this.x, this.y);
-      const l = this.two.makeCurve([v1, v1], true);
-      l.linewidth = 1;
-      l.noFill().stroke = '#ffffff'
-      l.vertices.forEach(v => {
-        v.addSelf(l.translation);
-      })
-      l.translation.clear();
-      this.lines[i] = {
-        x: this.x,
-        y: this.y,
-        line: l
-      }
+    for (let index = 0; index < NUMBER_BRANCHES; index++) {
+      this.lines.push({ x: this.x, y: this.y});
     }
   }
 
   draw() {
+    this.ctx.fillStyle = '#FFFFFF';
+    this.ctx.beginPath();
+    this.ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+    this.ctx.fill();
     this.drawLines();
+  }
+
+  drawBranches() {
+    this.drawLines()
   }
   
   drawLines() {
     xoff = xoff + this.scale(0.01);
-    var n = noise(xoff) * this.x + this.y;
     let angle = 0;
-    for (let i = 0; i < this.total; i += 1) {
-      const rad = calc.deg2rad(angle + n);
+    var n = noise(xoff) * this.x + this.y;
+    for (let i = 0; i < NUMBER_BRANCHES; i += 1) {
+      const rad = calc.deg2rad(angle + this.scale(n));
 
       const oldX = this.lines[i].x;
       const oldY = this.lines[i].y;
 
-      this.lines[i].x = oldX + (Math.cos(rad));
-      this.lines[i].y = oldY + (Math.sin(rad));
-      const point = this.makePoint(this.lines[i].x, this.lines[i].y);
-      this.lines[i].line.vertices.push(point);
+      this.lines[i].x = oldX + this.scale((Math.cos(rad)));
+      this.lines[i].y = oldY + this.scale((Math.sin(rad)));
       angle += this.angleStep;
+      this.ctx.fillStyle = '#FFFFFF';
+      this.ctx.beginPath();
+      this.ctx.arc(this.lines[i].x, this.lines[i].y, 1, 0, 2 * Math.PI);
+      this.ctx.fill();
     }
-  }
-
-  makePoint(x, y) {
-    var v = new this.Two.Vector(x, y);
-    v.position = new this.Two.Vector().copy(v);
-
-    return v;
   }
 }

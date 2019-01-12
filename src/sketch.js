@@ -1,6 +1,6 @@
 const Sphere = require('./sphere');
 
-let canvas = undefined;
+let ctx = undefined;
 let env = undefined;
 let scale = undefined;
 let draw = undefined;
@@ -11,36 +11,34 @@ let circle = undefined;
 let canvasWidth;
 let canvasHeight;
 
-const MAX_SPHERES = 2;
+const MAX_SPHERES = 50;
 const spheres = [];
 
-exports.setup = function({ _two, _Two, _env, _scale }){
+exports.setup = function({ _context, _canvas, _Two, _env, _scale }){
   env = _env;
   scale = _scale;
-  two = _two;
-  Two = _Two;
-  canvasWidth = two.renderer.domElement.width;
-  canvasHeight = two.renderer.domElement.height;
-  background = two.makeRectangle(canvasWidth / 2, canvasHeight / 2, canvasWidth, canvasHeight);
-  background.fill = '#000';
-  background.stroke = 'none'
+  ctx = _context;
+  canvasWidth = _canvas.width;
+  canvasHeight = _canvas.height;
+  ctx.fillStyle = '#000000';
+  ctx.rect(0, 0, canvasWidth, canvasHeight);
+  ctx.fill()
   createSpheres();
   spheres.forEach(item => item.draw())
-  // setTimeout(() => {
-  //   env.done();
-  // }, 500)
+  setTimeout(() => {
+    env.done();
+  }, 60000)
 }
 
 exports.draw = function() {
-  two.update();
-  spheres.forEach(item => item.draw())
+  spheres.forEach(item => item.drawBranches())
 }
 
 const createSpheres = () => {
   for (let i = 0; i < MAX_SPHERES; i++) {
     const x = Math.random() * canvasWidth;
     const y = Math.random() * canvasHeight;
-    const circle = new Sphere({Two, two, scale}, x, y, Math.random() * 50);
+    const circle = new Sphere({ctx, scale}, x, y, Math.random() * scale(50));
     spheres.push(circle);
   }
 }

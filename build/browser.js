@@ -11,12 +11,14 @@ const { context, canvas } = browserEnv.createContext(true)
 const two = new Two({
     width: canvas.width,
     height: canvas.height,
-    domElement: canvas
+    domElement: canvas,
 })
 
 const globals = {
     _two: two,
     _Two: Two,
+    _context: context,
+    _canvas: canvas,
     _env: browserEnv,
     _scale: scale(context),
 }
